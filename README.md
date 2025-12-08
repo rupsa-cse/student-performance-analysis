@@ -4,7 +4,7 @@ A simple data analysis project built using **Python (Pandas, NumPy)** on **Datab
 
 ---
 
-## 📊 Project Overview
+##  Project Overview
 
 This project analyzes student marks data to identify:
 - Subject-wise performance
@@ -14,7 +14,7 @@ This project analyzes student marks data to identify:
 
 ---
 
-## 🧠 Tools & Technologies
+##  Tools & Technologies
 
 | Tool | Purpose |
 |------|----------|
