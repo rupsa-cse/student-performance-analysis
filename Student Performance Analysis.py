@@ -1,4 +1,3 @@
-# Databricks notebook source
 print("Student Performance Analysis Notebook")
 print("Rows analyzed:", len(df))
 print("Overall average score:", df["average_score"].mean().round(2))
@@ -7,12 +6,12 @@ print("Excellent:", (df['performance'] == 'Excellent').sum(),
       "Needs Improvement:", (df['performance'] == 'Needs Improvement').sum())
 
 
-# COMMAND ----------
+
 
 spark_df = spark.table("retail.default.students")
 display(spark_df.limit(20))
 
-# COMMAND ----------
+
 
 import pandas as pd
 try:
@@ -20,12 +19,12 @@ try:
 except NameError:
     df = spark_df.toPandas()
 
-# Basic checks
+
 print("Rows:", len(df))
 print("Columns and dtypes:\n", df.dtypes)
 display(df.isnull().sum())
 
-# Convert score columns to numeric (defensive)
+# Convert score columns to numeric 
 score_cols = ["math_score", "reading_score", "writing_score", "study_hours"]
 for c in score_cols:
     df[c] = pd.to_numeric(df[c], errors="coerce")
@@ -35,7 +34,7 @@ df = df.dropna(subset=score_cols).reset_index(drop=True)
 display(df.head())
 
 
-# COMMAND ----------
+
 
 import numpy as np
 
@@ -49,7 +48,6 @@ df["performance"] = np.where(df["average_score"] >= 85, "Excellent",
 display(df.head())
 
 
-# COMMAND ----------
 
 # Basic descriptive stats
 display(df[["math_score","reading_score","writing_score","average_score","study_hours"]].describe())
@@ -65,7 +63,6 @@ print("Performance distribution:")
 display(performance_counts)
 
 
-# COMMAND ----------
 
 # Top performer
 top = df.loc[df["average_score"].idxmax()].to_dict()
@@ -82,7 +79,6 @@ p75 = np.percentile(df["average_score"], 75)
 print(f"Percentiles - 25th: {p25:.2f}, 50th(median): {p50:.2f}, 75th: {p75:.2f}")
 
 
-# COMMAND ----------
 
 # Correlations
 corr_study_avg = df["study_hours"].corr(df["average_score"])
@@ -94,7 +90,7 @@ print(f"Correlation (study_hours vs math_score): {corr_study_math:.2f}")
 display(df[["math_score","reading_score","writing_score","average_score","study_hours"]].corr().round(2))
 
 
-# COMMAND ----------
+
 
 # Convert pandas df back to Spark DataFrame
 processed_spark_df = spark.createDataFrame(df)
@@ -105,24 +101,14 @@ processed_spark_df.write.mode("overwrite").saveAsTable("retail.default.student_a
 print("Saved table: retail.default.student_analysis")
 
 
-# COMMAND ----------
 
-# MAGIC %sql
-# MAGIC -- In a SQL cell or SQL Editor
-# MAGIC SELECT * FROM retail.default.student_analysis;
-# MAGIC
-
-# COMMAND ----------
-
-# Convert Pandas DataFrame to Spark
 spark_df = spark.createDataFrame(df)
 
-# Save as a managed table
+
 spark_df.write.mode("overwrite").saveAsTable("retail.default.student_analysis_results")
 
-print("✅ Analysis results saved as table: retail.default.student_analysis_results")
+print("Analysis results saved as table: retail.default.student_analysis_results")
 
 
-# COMMAND ----------
 
 display(df)
